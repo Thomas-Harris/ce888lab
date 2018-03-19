@@ -1,3 +1,4 @@
+#! /usr/bin/python3
 from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import np_utils
@@ -10,7 +11,7 @@ nb_classes = 10
 n = 4
 X_train = X_train[n:n+1,:]
 y_train = y_train[n:n+1,:]
-print X_train.shape
+print (X_train.shape)
 Y_train = np_utils.to_categorical(y_train, nb_classes)
 Y_test = np_utils.to_categorical(y_test, nb_classes)
 
