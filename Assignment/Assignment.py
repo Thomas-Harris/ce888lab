@@ -6,7 +6,7 @@ import numpy as np
 x = []
 y = []
 
-for i in range (0, 10):
+for i in range (0, 20):
 	language = random.choice(os.listdir("/home/mlvm2/ce888lab/Assignment/omniglot-master/python/images_background"))
 	#print(language)
 
