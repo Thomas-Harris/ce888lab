@@ -10,7 +10,7 @@ def split(array):
 	split_num = int(len(array)/(10/7))
 	return array[:split_num], array[split_num:]
 
-for i in range (0, 30):
+for i in range (0, 25):
 	language = random.choice(os.listdir("/home/mlvm2/ce888lab/Assignment/omniglot-master/python/images_background"))
 	#print(language)
 
@@ -58,5 +58,5 @@ tpot = TPOTClassifier(verbosity=2, max_time_mins=5, population_size=40)
 tpot.fit(x_train, y_train)
 print(tpot.score(x_test, y_test))
 
-tpot.export('tpot_asignment_pipeline.py')
+tpot.export('tpot_assignment_pipeline.py')
 
