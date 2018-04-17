@@ -2,15 +2,31 @@ import os, random
 from PIL import Image
 import numpy as np
 from tpot import TPOTClassifier
-import csv
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+
 x = []
 y = []
 
-def split(array):
-	split_num = int(len(array)/(10/7))
-	return array[:split_num], array[split_num:]
+def TPOT_Classifier():  
+	#Split Data
+	x_train, x_test, y_train, y_test = train_test_split(x, y,train_size=0.75, test_size=0.25) 
 
-for i in range (0, 25):
+	#print("Train x: \n",x_train,"\nTrain y: \n",y_train,"\nTest x: \n",x_test,"\nTest y: 	   	\n",y_test)
+	print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
+
+	#TPOT Classifier
+	tpot = TPOTClassifier(verbosity=2, max_time_mins=5, population_size=40)
+	tpot.fit(x_train, y_train)
+	print(tpot.score(x_test, y_test))
+	tpot.export('tpot_assignment_pipeline.py')
+
+def scikit_learn():
+	KN = KNeighborsClassifier(n_neighbors=2)
+	KN.fit(x, y)
+
+#--------------------------------Load A Sample of Random data---------------------------------
+for i in range (0, 50):
 	language = random.choice(os.listdir("/home/mlvm2/ce888lab/Assignment/omniglot-master/python/images_background"))
 	#print(language)
 
@@ -41,22 +57,14 @@ for i in range (0, 25):
 	yadd = np.array([dif])
 	x.append(xadd)
 	y.append(yadd)
+
 x = np.asarray(x)
 y = np.asarray(y)
-#print(x)
-#print(y)
 
+#Converts 2D array to 1D array
 y = y.ravel()
+#-------------------------------------------------------------------------------------------
 
-x_train, x_test = split(x)
-y_train, y_test = split(y)
-
-#print("Train x: \n",x_train,"\nTrain y: \n",y_train,"\nTest x: \n",x_test,"\nTest y: \n",y_test)
-#print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
-
-tpot = TPOTClassifier(verbosity=2, max_time_mins=5, population_size=40)
-tpot.fit(x_train, y_train)
-print(tpot.score(x_test, y_test))
-
-tpot.export('tpot_assignment_pipeline.py')
+TPOT_Classifier()
+scikit_learn()
 
