@@ -4,29 +4,38 @@ import numpy as np
 from tpot import TPOTClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.neighbors import DistanceMetric
 
 x = []
 y = []
 
 def TPOT_Classifier():  
-	#Split Data
-	x_train, x_test, y_train, y_test = train_test_split(x, y,train_size=0.75, test_size=0.25) 
-
-	#print("Train x: \n",x_train,"\nTrain y: \n",y_train,"\nTest x: \n",x_test,"\nTest y: 	   	\n",y_test)
-	print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
-
-	#TPOT Classifier
 	tpot = TPOTClassifier(verbosity=2, max_time_mins=5, population_size=40)
 	tpot.fit(x_train, y_train)
-	print(tpot.score(x_test, y_test))
 	tpot.export('tpot_assignment_pipeline.py')
+	TPOT_predict = tpot.predict(x_test)
+	score = tpot.score(x_test, y_test)
+	print(score)
+	print(y_test)
+	print(TPOT_predict)
+	return score
+
+def Metric(x, y):
+	return score
 
 def scikit_learn():
-	KN = KNeighborsClassifier(n_neighbors=2)
-	KN.fit(x, y)
+	DistanceMetric.get_metric('pyfunc', func=Metric)
+	KNN = KNeighborsClassifier(n_neighbors=2, algorithm='auto', metric=Metric)
+	KNN.fit(x_train, y_train)
+	predic = KNN.predict(x_test)
+	print(accuracy_score(y_test, predic))
+	print(y_test)
+	print(predic)
+	print(score)
 
 #--------------------------------Load A Sample of Random data---------------------------------
-for i in range (0, 50):
+for i in range (0, 30):
 	language = random.choice(os.listdir("/home/mlvm2/ce888lab/Assignment/omniglot-master/python/images_background"))
 	#print(language)
 
@@ -63,8 +72,13 @@ y = np.asarray(y)
 
 #Converts 2D array to 1D array
 y = y.ravel()
-#-------------------------------------------------------------------------------------------
 
-TPOT_Classifier()
+#Split Data
+x_train, x_test, y_train, y_test = train_test_split(x, y,train_size=0.75, test_size=0.25) 
+
+#print("Train x: \n",x_train,"\nTrain y: \n",y_train,"\nTest x: \n",x_test,"\nTest y: \n",y_test)
+#print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
+
+score = TPOT_Classifier()
 scikit_learn()
 
