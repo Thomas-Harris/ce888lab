@@ -6,19 +6,21 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.neighbors import DistanceMetric
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 x = []
 y = []
 
 def TPOT_Classifier():  
-	tpot = TPOTClassifier(verbosity=2, max_time_mins=5, population_size=40)
+	tpot = TPOTClassifier(verbosity=2, max_time_mins=5, population_size=40,)
 	tpot.fit(x_train, y_train)
 	tpot.export('tpot_assignment_pipeline.py')
 	TPOT_predict = tpot.predict(x_test)
 	score = tpot.score(x_test, y_test)
-	print(score)
-	print(y_test)
-	print(TPOT_predict)
+	#print(score)
+	#print(y_test)
+	#print(TPOT_predict)
 	return score
 
 def Metric(x, y):
@@ -32,10 +34,17 @@ def scikit_learn():
 	print(accuracy_score(y_test, predic))
 	print(y_test)
 	print(predic)
-	print(score)
+
+def TPOT_model():
+	model = RandomForestClassifier(bootstrap=False, class_weight="balanced",criterion="gini", 		max_features=0.7500000000000001, min_samples_leaf=5, min_samples_split=9,n_estimators=100)
+	model.fit(x_train, y_train)
+	predic = model.predict(x_test)
+	print(accuracy_score(y_test, predic))
+	print(y_test)
+	print(predic)
 
 #--------------------------------Load A Sample of Random data---------------------------------
-for i in range (0, 30):
+for i in range (0, 25):
 	language = random.choice(os.listdir("/home/mlvm2/ce888lab/Assignment/omniglot-master/python/images_background"))
 	#print(language)
 
@@ -81,4 +90,5 @@ x_train, x_test, y_train, y_test = train_test_split(x, y,train_size=0.75, test_s
 
 score = TPOT_Classifier()
 scikit_learn()
+TPOT_model()
 
