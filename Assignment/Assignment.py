@@ -12,6 +12,8 @@ from sklearn.ensemble import RandomForestClassifier
 x = []
 y = []
 
+
+#-------------------------------Generate Model and Hyperparameters----------------------------
 def TPOT_Classifier():  
 	tpot = TPOTClassifier(verbosity=2, max_time_mins=5, population_size=40,)
 	tpot.fit(x_train, y_train)
@@ -23,9 +25,11 @@ def TPOT_Classifier():
 	#print(TPOT_predict)
 	return score
 
+#----------------------Actuacy score from Model used as Metric Function----------------------
 def Metric(x, y):
 	return score
 
+#---------------------------------------KNN Classifier---------------------------------------
 def scikit_learn():
 	DistanceMetric.get_metric('pyfunc', func=Metric)
 	KNN = KNeighborsClassifier(n_neighbors=2, algorithm='auto', metric=Metric)
@@ -35,6 +39,7 @@ def scikit_learn():
 	print(y_test)
 	print(predic)
 
+#-------------------------Model and hyperparameters from TPOT pipeline-----------------------
 def TPOT_model():
 	model = RandomForestClassifier(bootstrap=False, class_weight="balanced",criterion="gini", 		max_features=0.7500000000000001, min_samples_leaf=5, min_samples_split=9,n_estimators=100)
 	model.fit(x_train, y_train)
@@ -79,15 +84,16 @@ for i in range (0, 25):
 x = np.asarray(x)
 y = np.asarray(y)
 
-#Converts 2D array to 1D array
+#---------------------------------Converts 2D array to 1D array-------------------------------
 y = y.ravel()
 
-#Split Data
+#------------------------------------------Split Data-----------------------------------------
 x_train, x_test, y_train, y_test = train_test_split(x, y,train_size=0.75, test_size=0.25) 
 
 #print("Train x: \n",x_train,"\nTrain y: \n",y_train,"\nTest x: \n",x_test,"\nTest y: \n",y_test)
 #print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
 
+#------------------------------------------Functions------------------------------------------
 score = TPOT_Classifier()
 scikit_learn()
 TPOT_model()
