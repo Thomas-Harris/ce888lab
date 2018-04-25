@@ -11,18 +11,19 @@ from sklearn.ensemble import RandomForestClassifier
 
 x = []
 y = []
-
+count1 = 0
+count0 = 0
 
 #-------------------------------Generate Model and Hyperparameters----------------------------
 def TPOT_Classifier():  
-	tpot = TPOTClassifier(verbosity=2, max_time_mins=5, population_size=40,)
+	tpot = TPOTClassifier(verbosity=2, max_time_mins=60, population_size=40,)
 	tpot.fit(x_train, y_train)
 	tpot.export('tpot_assignment_pipeline.py')
 	TPOT_predict = tpot.predict(x_test)
 	score = tpot.score(x_test, y_test)
-	#print(score)
-	#print(y_test)
-	#print(TPOT_predict)
+	print(score)
+	print(y_test)
+	print(TPOT_predict)
 	return score
 
 #----------------------Actuacy score from Model used as Metric Function----------------------
@@ -44,12 +45,14 @@ def TPOT_model():
 	model = RandomForestClassifier(bootstrap=False, class_weight="balanced",criterion="gini", 		max_features=0.7500000000000001, min_samples_leaf=5, min_samples_split=9,n_estimators=100)
 	model.fit(x_train, y_train)
 	predic = model.predict(x_test)
-	print(accuracy_score(y_test, predic))
+	score = accuracy_score(y_test, predic)
+	print(score)
 	print(y_test)
 	print(predic)
+	return score
 
 #--------------------------------Load A Sample of Random data---------------------------------
-for i in range (0, 25):
+for i in range (0, 20000):
 	language = random.choice(os.listdir("/home/mlvm2/ce888lab/Assignment/omniglot-master/python/images_background"))
 	#print(language)
 
@@ -76,10 +79,18 @@ for i in range (0, 25):
 	image1array = list(im1.getdata())
 	image2array = list(im2.getdata())
 
-	xadd = (np.array([image1array,image2array])).ravel()
-	yadd = np.array([dif])
-	x.append(xadd)
-	y.append(yadd)
+	if count1<1000 and dif == 1:
+		xadd = (np.array([image1array,image2array])).ravel()
+		yadd = np.array([dif])
+		x.append(xadd)
+		y.append(yadd)
+		count1 = count1 + 1
+	if count0<1000 and dif == 0:
+		xadd = (np.array([image1array,image2array])).ravel()
+		yadd = np.array([dif])
+		x.append(xadd)
+		y.append(yadd)
+		count0 = count0 + 1
 
 x = np.asarray(x)
 y = np.asarray(y)
@@ -88,13 +99,14 @@ y = np.asarray(y)
 y = y.ravel()
 
 #------------------------------------------Split Data-----------------------------------------
-x_train, x_test, y_train, y_test = train_test_split(x, y,train_size=0.75, test_size=0.25) 
 
+x_train, x_test, y_train, y_test = train_test_split(x, y,train_size=0.75, test_size=0.25) 
 #print("Train x: \n",x_train,"\nTrain y: \n",y_train,"\nTest x: \n",x_test,"\nTest y: \n",y_test)
-#print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
+print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
 
 #------------------------------------------Functions------------------------------------------
 score = TPOT_Classifier()
+#score = TPOT_model()
 scikit_learn()
-TPOT_model()
+
 
