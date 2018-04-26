@@ -16,7 +16,7 @@ count0 = 0
 
 #-------------------------------Generate Model and Hyperparameters----------------------------
 def TPOT_Classifier():  
-	tpot = TPOTClassifier(verbosity=2, max_time_mins=60, population_size=40,)
+	tpot = TPOTClassifier(verbosity=2, max_time_mins=390, population_size=40,)
 	tpot.fit(x_train, y_train)
 	tpot.export('tpot_assignment_pipeline.py')
 	TPOT_predict = tpot.predict(x_test)
@@ -26,7 +26,7 @@ def TPOT_Classifier():
 	print(TPOT_predict)
 	return score
 
-#----------------------Actuacy score from Model used as Metric Function----------------------
+#----------------------Accuracy score from Model used as Metric Function----------------------
 def Metric(x, y):
 	return score
 
@@ -42,7 +42,7 @@ def scikit_learn():
 
 #-------------------------Model and hyperparameters from TPOT pipeline-----------------------
 def TPOT_model():
-	model = RandomForestClassifier(bootstrap=False, class_weight="balanced",criterion="gini", 		max_features=0.7500000000000001, min_samples_leaf=5, min_samples_split=9,n_estimators=100)
+	model = RandomForestClassifier(bootstrap=False, class_weight="balanced",criterion="gini", 		max_features=0.05, min_samples_leaf=7, min_samples_split=8,n_estimators=100)
 	model.fit(x_train, y_train)
 	predic = model.predict(x_test)
 	score = accuracy_score(y_test, predic)
@@ -52,7 +52,7 @@ def TPOT_model():
 	return score
 
 #--------------------------------Load A Sample of Random data---------------------------------
-for i in range (0, 20000):
+for i in range (0, 10000):
 	language = random.choice(os.listdir("/home/mlvm2/ce888lab/Assignment/omniglot-master/python/images_background"))
 	#print(language)
 
@@ -79,13 +79,13 @@ for i in range (0, 20000):
 	image1array = list(im1.getdata())
 	image2array = list(im2.getdata())
 
-	if count1<1000 and dif == 1:
+	if count1<500 and dif == 1:
 		xadd = (np.array([image1array,image2array])).ravel()
 		yadd = np.array([dif])
 		x.append(xadd)
 		y.append(yadd)
 		count1 = count1 + 1
-	if count0<1000 and dif == 0:
+	if count0<500 and dif == 0:
 		xadd = (np.array([image1array,image2array])).ravel()
 		yadd = np.array([dif])
 		x.append(xadd)
@@ -102,11 +102,11 @@ y = y.ravel()
 
 x_train, x_test, y_train, y_test = train_test_split(x, y,train_size=0.75, test_size=0.25) 
 #print("Train x: \n",x_train,"\nTrain y: \n",y_train,"\nTest x: \n",x_test,"\nTest y: \n",y_test)
-print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
+#print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
 
 #------------------------------------------Functions------------------------------------------
-score = TPOT_Classifier()
-#score = TPOT_model()
+#score = TPOT_Classifier()
+score = TPOT_model()
 scikit_learn()
 
 
